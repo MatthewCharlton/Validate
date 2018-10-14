@@ -14,7 +14,7 @@
     "type": "git",
     "url": "https://github.com/MatthewCharlton/Validate.git"
   },
-  "keywords": [],
+  "keywords": ["validation functions"],
   "author": "MatthewCharlton",
   "license": "ISC",
   "files": [
