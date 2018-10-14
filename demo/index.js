@@ -2,6 +2,15 @@ const validate = require('../dist/matts-sick-validation-func.common.js')
   .default;
 
 const {
+  isAlphabet,
+  isNumeric
+} = require('../dist/matts-sick-validation-func.common.js');
+
+console.log(
+  isAlphabet({ value: '123' }).isValid && isNumeric({ value: '123' }).isValid
+);
+
+const {
   ValidateBase
 } = require('../dist/matts-sick-validation-func.common.js');
 
