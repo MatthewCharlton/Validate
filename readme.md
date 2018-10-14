@@ -15,15 +15,19 @@ npm i --save matts-sick-validation-func
 Import the main validate function
 
 Using JS modules
+
 ```
 import validate from 'matts-sick-validation-func';
 ```
+
 OR using require e.g. Node JS
+
 ```
 const validate = require('matts-sick-validation-func').default;
 ```
 
 Then begin testing
+
 ```
 validate.test('123').isNumeric().isValid  // true
 validate.test('ABC').isNumeric().isValid  // false
@@ -79,6 +83,7 @@ isAlphabet({ value: 'ABC', min: 2, max: 3 }).isValid  // true
 isAlphabet({ value: 'ABCD', min: 2, max: 3 }).isValid  // false
 isAlphabet({ value: 'ABCD', min: 2, max: 3, message: 'Cannot be longer than 4 characters' }).messages  // ['Cannot be longer than 4 characters']
 validate.test('test').isNumeric({ message: 'Value is not a number' }).hasUpperCase({ message: 'Value does not have uppercase characters'}).messages  // ['Value is not a number', 'Value does not have uppercase characters']
+validate.test('Abc 123').matches({ fn: (val) => exampleDbQueryFunction(val).length > 0 }).isValid  // true
 ```
 
 #### Extend with your own functions
