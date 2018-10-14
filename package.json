@@ -1,5 +1,5 @@
 {
-  "name": "matts-sick-validation-func-1",
+  "name": "matts-sick-validation-func",
   "version": "0.5.2",
   "description": "Validation functions",
   "browser": "dist/matts-sick-validation-func.min.js",
