@@ -81,11 +81,13 @@ isNumeric({ value: '123' }).isValid  // true
 ```
 
 If you wish to use a custom regex use the **matches** function
+
 ```
 validate.test('Abc 123').matches({ regex: /[a-zA-Z\s\d]/ }).isValid  // true
 ```
 
-Reverse validation result with **invert** function - using above test
+Reverse validation result with **invert** function - pass the function you wish to invert as first parameter then that functions arguments as the second - the example below shows reversing the matches example above
+
 ```
 validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid  // false
 ```
