@@ -34,6 +34,7 @@ describe('Validate', () => {
         );
       });
     });
+
     describe('hasUpperCase', () => {
       it('if has uppercase returns true', () => {
         expect(validate.test('Test').hasUpperCase().isValid).toBe(true);
@@ -60,6 +61,7 @@ describe('Validate', () => {
         ).toBe(false);
       });
     });
+
     describe('hasLowerCase', () => {
       it('if has lowercase returns true', () => {
         expect(validate.test('test').hasLowerCase().isValid).toBe(true);
@@ -84,6 +86,7 @@ describe('Validate', () => {
         ).toBe(false);
       });
     });
+
     describe('lengthBetween', () => {
       it('if has length between 3 and 4 returns true', () => {
         expect(
@@ -102,6 +105,7 @@ describe('Validate', () => {
         ).toBe(false);
       });
     });
+
     describe('isAlphanumeric', () => {
       it('if has alphanumeric characters returns true', () => {
         expect(validate.test('Blah123').isAlphanumeric().isValid).toBe(true);
@@ -110,6 +114,7 @@ describe('Validate', () => {
         expect(validate.test('[]|<>.]').isAlphanumeric().isValid).toBe(false);
       });
     });
+
     describe('isAlphabet', () => {
       it('if has only alphabet characters returns true', () => {
         expect(validate.test('blah').isAlphabet().isValid).toBe(true);
@@ -118,6 +123,7 @@ describe('Validate', () => {
         expect(validate.test('Blah123').isAlphabet().isValid).toBe(false);
       });
     });
+
     describe('isNumeric', () => {
       it('if has only numbers returns true', () => {
         expect(validate.test('123').isNumeric().isValid).toBe(true);
@@ -126,6 +132,7 @@ describe('Validate', () => {
         expect(validate.test('Blah123').isNumeric().isValid).toBe(false);
       });
     });
+
     describe('matches', () => {
       it('if regex argument matches returns true', () => {
         describe('regex', () => {
@@ -139,6 +146,7 @@ describe('Validate', () => {
           validate.test('blah').matches({ regex: /^(123)$/ }).isValid
         ).toBe(false);
       });
+
       describe('fn', () => {
         it('when a function is passed to matches it evaluates the return value', () => {
           expect(
@@ -158,6 +166,7 @@ describe('Validate', () => {
         });
       });
     });
+
     describe('invert', () => {
       it('if invert called on validate function name returns opposite boolean, so this passes true but will return false', () => {
         expect(validate.test('123').invert('isNumeric').isValid).toBe(false);
@@ -168,6 +177,7 @@ describe('Validate', () => {
         ).toBe(true);
       });
     });
+
     describe('error messages', () => {
       it('if a message is passed to particular function and value is not valid then message is output in array', () => {
         expect(
@@ -256,6 +266,19 @@ describe('Validate', () => {
         expect(lengthBetween({ value: '1234', min: 2, max: 3 }).isValid).toBe(
           false
         );
+      });
+    });
+
+    describe('min and max params', () => {
+      it('passed min and max returns true', () => {
+        expect(
+          isAlphanumeric({ value: 'abc123', min: 4, max: 6 }).isValid
+        ).toBe(true);
+      });
+      it('passed min and max returns false', () => {
+        expect(
+          isAlphanumeric({ value: 'abc123', min: 2, max: 3 }).isValid
+        ).toBe(false);
       });
     });
   });
