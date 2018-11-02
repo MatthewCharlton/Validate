@@ -13,9 +13,9 @@
   <h1 id="test"></h1>
   <h1 id="test2"></h1>
   <script>
-    console.log(mattsSickValidationFuncUmd)
-    document.getElementById("test").innerHTML = "123 is a number: " + mattsSickValidationFuncUmd.default.test('123').isNumeric().isValid
-    document.getElementById("test2").innerHTML = "ABC are letters: " + mattsSickValidationFuncUmd.isAlphabet({ value: 'ABC' }).isValid
+    console.log(MSVF)
+    document.getElementById("test").innerHTML = "123 is a number: " + MSVF.default.test('123').isNumeric().isValid
+    document.getElementById("test2").innerHTML = "ABC are letters: " + MSVF.isAlphabet({ value: 'ABC' }).isValid
   </script>
 </body>
 
