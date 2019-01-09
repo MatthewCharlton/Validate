@@ -10,33 +10,60 @@ npm i --save matts-sick-validation-func
 
 ### Usage
 
+Valid value example:
+```javascript
+const result = validate
+  .test('Test value')
+  .isAlphabet({ message: 'Value is not a letter' })
+  .hasLowerCase({ message: 'No lowercase' })
+  .hasUpperCase({ message: 'No uppercase' })
+  .errors(); 
+  
+result.join(', ') // Outputs ''
+```
+
+Invalid value example:
+```javascript
+const result = validate
+  .test('123')
+  .isAlphabet({ message: 'Value is not a letter' })
+  .hasLowerCase({ message: 'No lowercase' })
+  .hasUpperCase({ message: 'No uppercase' })
+  .errors(); 
+
+result.join(', ') // Outputs 'Value is not a letter, No lowercase, No uppercase'
+```
+
 #### Main validation function
 
 Import the main validate function
 
 Using JS modules
 
-```
+```javascript
 import validate from 'matts-sick-validation-func';
 ```
 
 OR using require e.g. Node JS
 
-```
+```javascript
 const validate = require('matts-sick-validation-func').default;
 ```
 
 Then begin testing
 
-```
-validate.test('123').isNumeric().isValid  // true
-validate.test('ABC').isNumeric().isValid  // false
+```javascript
+validate.test('123').isNumeric().isValid; // true
+validate.test('ABC').isNumeric().isValid; // false
 ```
 
 You can also chain functions together
 
-```
-validate.test('Abc123').hasUpperCase().hasDigits().isValid  // true
+```javascript
+validate
+  .test('Abc123')
+  .hasUpperCase()
+  .hasDigits().isValid; // true
 ```
 
 #### Function parameters
@@ -49,15 +76,17 @@ You can pass an object to refine your validation requirements
 - min: Minimum number characters that must match to be valid
 - max: Maximum number characters that must match to be valid
 - message: String that will be shown when validation does not meet requirements
+- isPriority: Boolean that will save the message to the priorityMessage property
 
 Examples
 
-```
+```javascript
 isAlphabet({ value: 'ABC', min: 2, max: 3 }).isValid  // true
 isAlphabet({ value: 'ABCD', min: 2, max: 3 }).isValid  // false
 isAlphabet({ value: 'ABCD', min: 2, max: 3, message: 'Cannot be longer than 4 characters' }).messages  // ['Cannot be longer than 4 characters']
 validate.test('test').isNumeric({ message: 'Value is not a number' }).hasUpperCase({ message: 'Value does not have uppercase characters'}).messages  // ['Value is not a number', 'Value does not have uppercase characters']
 validate.test('Abc 123').matches({ fn: (val) => exampleDbQueryFunction(val).length > 0 }).isValid  // true
+validate.test('123').isAlphabet({ message:'Not letters', isPriority = true }).hasUpperCase({ message: 'No uppercase' }).priorityMessage // 'Not letters'
 ```
 
 #### Stand-alone functions
@@ -73,37 +102,50 @@ You can import stand-alone functions too which can help tree-shaking
 - lengthBetween
 - matches
 
-```
+```javascript
 import { isAlphabet, isNumeric } from 'matts-sick-validation-func';
-isAlphabet({ value: 'ABC' }).isValid  // true
-isAlphabet({ value: '123' }).isValid  // false
-isNumeric({ value: '123' }).isValid  // true
+isAlphabet({ value: 'ABC' }).isValid; // true
+isAlphabet({ value: '123' }).isValid; // false
+isNumeric({ value: '123' }).isValid; // true
 ```
 
 If you wish to use a custom regex use the **matches** function
 
-```
-validate.test('Abc 123').matches({ regex: /[a-zA-Z\s\d]/ }).isValid  // true
+```javascript
+validate.test('Abc 123').matches({ regex: /[a-zA-Z\s\d]/ }).isValid; // true
 ```
 
 Reverse validation result with **invert** function - pass the function you wish to invert as first parameter then that functions arguments as the second - the example below shows reversing the matches example above
 
+```javascript
+validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid; // false
 ```
-validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid  // false
+
+#### Check for errors with errors function
+
+Aside from getting the result of a validation directly using `.isValid` or `.messages` you can call `.errors()` which will retrieve either the priorityMessage and output as an array or the messages array
+
+```javascript
+validate
+  .test('Abc 123')
+  .invert('matches', { regex: /[a-zA-Z\s\d]/, message: 'Value is invalid' })
+  .errors(); // [''Value is invalid']
 ```
 
 #### Extend with your own functions
 
-Import the base ValidateBase function and pass in an object
+Import the base ValidateBase function and pass in an object with your custom named functions using the **ValidateBase.matches** function
 
-```
+```javascript
 import { ValidateBase } from 'matts-sick-validation-func';
+
 const customValidate = new ValidateBase({
   isWebAddress: ({ value, min = 0, max = '', message } = {}) =>
     customValidate.matches({
+      value,
       regex: `^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+\.[a-z]+(\/[a-zA-Z0-9.#]+\/?){${min},${max}}$`,
       message,
-      value
+      isPriority
     })
 });
 ```
