@@ -104,6 +104,14 @@ describe('Validate', () => {
           validate.test('TESTING').lengthBetween({ min: 3, max: 4 }).isValid
         ).toBe(false);
       });
+      it('pass just "min" param', () => {
+        expect(validate.test('bl').lengthBetween({ min: 3 }).isValid).toBe(
+          false
+        );
+        expect(validate.test('blah').lengthBetween({ min: 3 }).isValid).toBe(
+          true
+        );
+      });
     });
 
     describe('isAlphanumeric', () => {
@@ -178,14 +186,14 @@ describe('Validate', () => {
       });
     });
 
-    describe('error messages', () => {
-      it('if a message is passed to particular function and value is not valid then message is output in array', () => {
+    describe('messages', () => {
+      it('if a message is passed to particular function and value is not valid then message is added to messages array', () => {
         expect(
           validate.test('test').isNumeric({ message: 'Value is not a number' })
             .messages
         ).toEqual(['Value is not a number']);
       });
-      it('if a message is passed to different functions then they are output in order of chained functions', () => {
+      it('if a message is passed to different functions then they are added in order of chained functions', () => {
         expect(
           validate
             .test('test')
@@ -197,6 +205,113 @@ describe('Validate', () => {
           'Value is not a number',
           'Value does not have uppercase characters'
         ]);
+      });
+    });
+
+    describe('priorityMessage', () => {
+      it('returns empty string if "isPriority = true" is not passed and value is invalid', () => {
+        expect(
+          validate
+            .test('123')
+            .isNumeric({ message: 'Value is not a number' })
+            .hasUpperCase({ message: 'No uppercase' }).priorityMessage // this is invalid but "isPriority = true" not passed
+        ).toEqual('');
+      });
+      it('returns only the priority message if "isPriority = true" and value is invalid', () => {
+        expect(
+          validate
+            .test('test')
+            .isNumeric({ message: 'Value is not a number' })
+            .hasUpperCase({ message: 'No uppercase', isPriority: true })
+            .priorityMessage
+        ).toEqual('No uppercase');
+      });
+      it('returns only the last priority message if "isPriority = true" is passed to multiple methods and value is invalid', () => {
+        expect(
+          validate
+            .test('test')
+            .isNumeric({ message: 'Value is not a number', isPriority: true })
+            .hasUpperCase({ message: 'No uppercase', isPriority: true })
+            .priorityMessage
+        ).toEqual('No uppercase');
+      });
+    });
+
+    describe('errors', () => {
+      it('returns empty array if valid as there are no errors', () => {
+        expect(
+          validate
+            .test('123')
+            .isNumeric({ message: 'Value is not a number' })
+            .errors()
+        ).toEqual([]);
+      });
+      it('returns an array with messages if invalid', () => {
+        expect(
+          validate
+            .test('*&%$')
+            .isNumeric({ message: 'Value is not a number' })
+            .hasUpperCase({ message: 'No uppercase' })
+            .hasLowerCase({ message: 'No lowercase' })
+            .errors()
+        ).toEqual(['Value is not a number', 'No uppercase', 'No lowercase']);
+      });
+      it('returns only the priority message if "isPriority: true" passed and value is invalid for that function', () => {
+        expect(
+          validate
+            .test('*&%$')
+            .isNumeric({ message: 'Value is not a number', isPriority: true })
+            .hasUpperCase({ message: 'No uppercase' })
+            .hasLowerCase({ message: 'No lowercase' })
+            .errors()
+        ).toEqual(['Value is not a number']);
+      });
+      it('returns all messages if "isPriority: true" passed but value is valid for that function', () => {
+        expect(
+          validate
+            .test('123')
+            .isNumeric({ message: 'Value is not a number', isPriority: true }) // this passes validation
+            .isAlphabet({ message: 'Value is not a letter' })
+            .hasLowerCase({ message: 'No lowercase' })
+            .hasUpperCase({ message: 'No uppercase' })
+            .errors()
+        ).toEqual(['Value is not a letter', 'No lowercase', 'No uppercase']);
+      });
+      it('returns only the priority message if "isPriority: true" passed and value is invalid with "invert" function', () => {
+        expect(
+          validate
+            .test('123')
+            .invert('isNumeric', {
+              message: "We don't want a number",
+              isPriority: true
+            }) // this fails validation as we want invert to fail the validation if value is a number
+            .hasUpperCase({ message: 'No uppercase' })
+            .errors()
+        ).toEqual(["We don't want a number"]);
+      });
+      it('calls function passed as param if value invalid', () => {
+        const funcMock = jest.fn();
+        validate
+          .test('123')
+          .invert('isNumeric', {
+            message: 'Value is a number',
+            isPriority: true
+          })
+          .hasUpperCase({ message: 'No uppercase' })
+          .errors(
+            obj => !obj.isValid && funcMock(obj.isValid, obj.priorityMessage)
+          );
+        expect(funcMock).toBeCalledWith(false, 'Value is a number');
+      });
+      it('does not call function passed as param if value valid', () => {
+        const funcMock = jest.fn();
+        validate
+          .test('123')
+          .isNumeric({ message: 'Value is not a number', isPriority: true })
+          .errors(
+            obj => !obj.isValid && funcMock(obj.isValid, obj.priorityMessage)
+          );
+        expect(funcMock).toBeCalledTimes(0);
       });
     });
   });
