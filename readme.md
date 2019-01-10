@@ -1,6 +1,6 @@
 # Matts Sick Validation Func
 
-Probably the best validation utility ever made.
+Probably the best validation utility ever made 😜
 
 ### Installing
 
@@ -9,6 +9,22 @@ npm i --save matts-sick-validation-func
 ```
 
 ### Usage
+
+Import the main validate function
+
+Using JS modules
+
+```javascript
+import validate from 'matts-sick-validation-func';
+```
+
+OR using require e.g. Node JS
+
+```javascript
+const validate = require('matts-sick-validation-func').default;
+```
+
+#### Getting started
 
 Valid value example:
 
@@ -36,23 +52,11 @@ const result = validate
 result.join(', '); // Outputs 'Value is not a letter, No lowercase, No uppercase'
 ```
 
+### Overview
+
 #### Main validation function
 
-Import the main validate function
-
-Using JS modules
-
-```javascript
-import validate from 'matts-sick-validation-func';
-```
-
-OR using require e.g. Node JS
-
-```javascript
-const validate = require('matts-sick-validation-func').default;
-```
-
-Then begin testing
+Test value is valid
 
 ```javascript
 validate.test('123').isNumeric().isValid; // true
@@ -72,13 +76,13 @@ validate
 
 You can pass an object to refine your validation requirements
 
-- value: Value to validate when using stand-alone functions ( not to be used when using main validate function or chaining )
-- regex: Regex pattern literal or string used to validate ( e.g. \/\^[a-z]\$\/ or '\^[a-z]\$' )
-- fn: Function that is used to validate ( value is automatically passed into function as parameter )
-- min: Minimum number characters that must match to be valid
-- max: Maximum number characters that must match to be valid
-- message: String that will be shown when validation does not meet requirements
-- isPriority: Boolean that will save the message to the priorityMessage property
+- **value**: Value to validate when using stand-alone functions ( not to be used when using main validate function or chaining )
+- **regex**: Regex pattern literal or string used to validate ( e.g. \/\^[a-z]\$\/ or '\^[a-z]\$' )
+- **fn**: Function that is used to validate ( value is automatically passed into function as parameter )
+- **min**: Minimum number characters that must match to be valid
+- **max**: Maximum number characters that must match to be valid
+- **message**: String that will be shown when validation does not meet requirements
+- **isPriority**: Boolean that will save the message to the priorityMessage property
 
 Examples
 
@@ -119,6 +123,7 @@ You can import stand-alone functions too which can help tree-shaking
 
 ```javascript
 import { isAlphabet, isNumeric } from 'matts-sick-validation-func';
+
 isAlphabet({ value: 'ABC' }).isValid; // true
 isAlphabet({ value: '123' }).isValid; // false
 isNumeric({ value: '123' }).isValid; // true
