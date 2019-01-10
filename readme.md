@@ -11,27 +11,29 @@ npm i --save matts-sick-validation-func
 ### Usage
 
 Valid value example:
+
 ```javascript
 const result = validate
   .test('Test value')
   .isAlphabet({ message: 'Value is not a letter' })
   .hasLowerCase({ message: 'No lowercase' })
   .hasUpperCase({ message: 'No uppercase' })
-  .errors(); 
-  
-result.join(', ') // Outputs ''
+  .errors();
+
+result.join(', '); // Outputs ''
 ```
 
 Invalid value example:
+
 ```javascript
 const result = validate
   .test('123')
   .isAlphabet({ message: 'Value is not a letter' })
   .hasLowerCase({ message: 'No lowercase' })
   .hasUpperCase({ message: 'No uppercase' })
-  .errors(); 
+  .errors();
 
-result.join(', ') // Outputs 'Value is not a letter, No lowercase, No uppercase'
+result.join(', '); // Outputs 'Value is not a letter, No lowercase, No uppercase'
 ```
 
 #### Main validation function
@@ -83,10 +85,24 @@ Examples
 ```javascript
 isAlphabet({ value: 'ABC', min: 2, max: 3 }).isValid  // true
 isAlphabet({ value: 'ABCD', min: 2, max: 3 }).isValid  // false
-isAlphabet({ value: 'ABCD', min: 2, max: 3, message: 'Cannot be longer than 4 characters' }).messages  // ['Cannot be longer than 4 characters']
-validate.test('test').isNumeric({ message: 'Value is not a number' }).hasUpperCase({ message: 'Value does not have uppercase characters'}).messages  // ['Value is not a number', 'Value does not have uppercase characters']
-validate.test('Abc 123').matches({ fn: (val) => exampleDbQueryFunction(val).length > 0 }).isValid  // true
-validate.test('123').isAlphabet({ message:'Not letters', isPriority = true }).hasUpperCase({ message: 'No uppercase' }).priorityMessage // 'Not letters'
+isAlphabet({ value: 'ABCD', min: 2, max: 3, message: 'Too long!' }).messages  // ['Too long!']
+
+validate
+  .test('test')
+  .isNumeric({ message: 'Value is not a number' })
+  .hasUpperCase({ message: 'Value does not have uppercase characters'})
+  .messages  // ['Value is not a number', 'Value does not have uppercase characters']
+
+validate
+  .test('Abc 123')
+  .matches({ fn: (val) => exampleDbQueryFunction(val).length > 0 })
+  .isValid  // true
+
+validate
+  .test('123')
+  .isAlphabet({ message:'Not letters', isPriority = true })
+  .hasUpperCase({ message: 'No uppercase' })
+  .priorityMessage // 'Not letters'
 ```
 
 #### Stand-alone functions
@@ -123,13 +139,23 @@ validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid; /
 
 #### Check for errors with errors function
 
-Aside from getting the result of a validation directly using `.isValid` or `.messages` you can call `.errors()` which will retrieve either the priorityMessage and output as an array or the messages array
+Aside from getting the result of a validation directly using `.isValid` or `.messages` you can call `.errors()` which will retrieve either the priorityMessage and output as an array or the messages array. You can alternatively pass in a function which is passed the whole validation object as a parameter and will only execute if the value is invalid
+
+isPriority is not passed into any validate methods and no funciton is passed into `.errors()` so will output messages array
+
+```javascript
+validate
+  .test('Abc 123')
+  .isAlphabet({ message: 'Not all letters' })
+  .invert('matches', { regex: /[a-zA-Z\s\d]/, message: 'Value is invalid' })
+  .errors(); // ['Not all letters', 'Value is invalid']
+```
 
 ```javascript
 validate
   .test('Abc 123')
   .invert('matches', { regex: /[a-zA-Z\s\d]/, message: 'Value is invalid' })
-  .errors(); // [''Value is invalid']
+  .errors(validationObj => mockCallLoggingService(validationObj.messages)); // function is called with messages array
 ```
 
 #### Extend with your own functions

@@ -298,9 +298,7 @@ describe('Validate', () => {
             isPriority: true
           })
           .hasUpperCase({ message: 'No uppercase' })
-          .errors(
-            obj => !obj.isValid && funcMock(obj.isValid, obj.priorityMessage)
-          );
+          .errors(obj => funcMock(obj.isValid, obj.priorityMessage));
         expect(funcMock).toBeCalledWith(false, 'Value is a number');
       });
       it('does not call function passed as param if value valid', () => {
@@ -308,9 +306,7 @@ describe('Validate', () => {
         validate
           .test('123')
           .isNumeric({ message: 'Value is not a number', isPriority: true })
-          .errors(
-            obj => !obj.isValid && funcMock(obj.isValid, obj.priorityMessage)
-          );
+          .errors(obj => funcMock(obj.isValid, obj.priorityMessage));
         expect(funcMock).toBeCalledTimes(0);
       });
     });
