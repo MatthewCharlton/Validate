@@ -1,6 +1,6 @@
 {
   "name": "matts-sick-validation-func",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Validation functions",
   "browser": "dist/matts-sick-validation-func.min.js",
   "main": "dist/matts-sick-validation-func.common.js",
