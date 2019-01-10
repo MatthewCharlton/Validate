@@ -129,13 +129,13 @@ isAlphabet({ value: '123' }).isValid; // false
 isNumeric({ value: '123' }).isValid; // true
 ```
 
-If you wish to use a custom regex use the **matches** function
+If you wish to use a custom regex use the **matches** function:
 
 ```javascript
 validate.test('Abc 123').matches({ regex: /[a-zA-Z\s\d]/ }).isValid; // true
 ```
 
-Reverse validation result with **invert** function - pass the function you wish to invert as first parameter then that functions arguments as the second - the example below shows reversing the matches example above
+Reverse validation result with **invert** function - pass the function you wish to invert as first parameter then that functions arguments as the second - the example below shows reversing the matches example above:
 
 ```javascript
 validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid; // false
@@ -145,7 +145,7 @@ validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid; /
 
 Aside from getting the result of a validation directly using `.isValid` or `.messages` you can call `.errors()` which will retrieve either the priorityMessage and output as an array or the messages array. You can alternatively pass in a function which is passed the whole validation object as a parameter and will only execute if the value is invalid
 
-isPriority is not passed into any validate methods and no funciton is passed into `.errors()` so will output messages array
+In the example below `isPriority` is not passed into any validate methods and no funciton is passed into `.errors()` so the result will be the messages array:
 
 ```javascript
 validate
@@ -155,16 +155,22 @@ validate
   .errors(); // ['Not all letters', 'Value is invalid']
 ```
 
+In the example below a function is passed into `.errors()` and the function will be called if the value is invalid:
+
 ```javascript
+const doSomethingWithMessages = ({ messages }) => {
+  console.log(messages);
+};
+
 validate
   .test('Abc 123')
   .invert('matches', { regex: /[a-zA-Z\s\d]/, message: 'Value is invalid' })
-  .errors(validationObj => mockCallLoggingService(validationObj.messages)); // function is called with messages array
+  .errors(doSomethingWithMessages); // logs messages array
 ```
 
 #### Extend with your own functions
 
-Import the base ValidateBase function and pass in an object with your custom named functions using the **ValidateBase.matches** function
+Import the base ValidateBase function and pass in an object with your custom named functions using the **matches** function
 
 ```javascript
 import { ValidateBase } from 'matts-sick-validation-func';
