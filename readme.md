@@ -116,7 +116,6 @@ You can import stand-alone functions too which can help tree-shaking
 - isAlphabet
 - isNumeric
 - lengthBetween
-- matches
 
 ```javascript
 import { isAlphabet, isNumeric } from 'matts-sick-validation-func';
