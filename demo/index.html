@@ -13,7 +13,17 @@
     <p id="test-result"></p>
     <h1 id="test2">12345</h1>
     <p id="test2-result"></p>
-    <p>Check the page source to see the code</p>
+    <code>
+      var validate = MSVF.default; var testValue =
+      document.getElementById('test').innerHTML;
+      document.getElementById('test-result').innerHTML = testValue + ' is a
+      number: ' + validate.test(testValue).isNumeric().isValid; var testValue2 =
+      document.getElementById('test2').innerHTML;
+      document.getElementById('test2-result').innerHTML = testValue2 + ' is a
+      number: ' + validate.test(testValue2).isNumeric().isValid;
+    </code>
+    <br />
+    <p>Check the page source to see the whole story</p>
     <script>
       console.log('MSVF', MSVF);
       var validate = MSVF.default;
@@ -28,10 +38,10 @@
         ' is a number: ' +
         validate.test(testValue2).isNumeric().isValid;
 
-      var validateWithWeb = new MSVF.ValidateBase(
+      var validateWithWebAddress = new MSVF.ValidateBase(
         {
           isWebAddress: ({ value, min = 0, max = '', message } = {}) =>
-            validateWithWeb.matches({
+            validateWithWebAddress.matches({
               regex: `^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+\.[a-z]+(\/[a-zA-Z0-9.#]+\/?){${min},${max}}$`,
               message,
               value
@@ -39,12 +49,12 @@
         },
         {
           websiteField: value =>
-            validateWithWeb.test(value).isWebAddress().isValid
+            validateWithWebAddress.test(value).isWebAddress().isValid
         }
       );
-      var schema = validateWithWeb.schema;
-      console.log(schema['websiteField']('http://blah.com'));
-      console.log(schema['websiteField']('http:/blah.c'));
+      var schema = validateWithWebAddress.schema;
+      console.log(schema['websiteField']('http://blah.com')); // true
+      console.log(schema['websiteField']('http:/blah.c')); // false
     </script>
   </body>
 </html>
