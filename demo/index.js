@@ -10,11 +10,11 @@ console.log(
   isAlphabet({ value: '123' }).isValid && isNumeric({ value: '123' }).isValid
 );
 
+console.log(validate.test('abc').isAlphabet().isValid);
+
 const {
   ValidateBase
 } = require('../dist/matts-sick-validation-func.common.js');
-
-console.log(validate.test('abc').isAlphabet().isValid);
 
 const customValidate = new ValidateBase({
   isWebAddress: ({ value, min = 0, max = '', message } = {}) =>

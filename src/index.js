@@ -1,6 +1,8 @@
 export class ValidateBase {
-  constructor(config = {}) {
-    Object.keys(config).map(fn => (this[fn] = config[fn]));
+  constructor(config = {}, schema = {}) {
+    this.schema = {};
+    Object.keys(config).map(key => (this[key] = config[key]));
+    Object.keys(schema).map(key => (this.schema[key] = schema[key]));
     this.value = '';
     this.messages = [];
     this.negate = false;
