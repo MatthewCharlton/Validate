@@ -26,21 +26,17 @@ export default {
     {
       file: pkg.browser,
       name: name,
-      format: 'umd',
-      moduleName: 'validate',
-      sourceMap: true
+      format: 'iife'
     },
     {
       file: pkg.main,
       name: name,
-      format: 'cjs',
-      sourceMap: true
+      format: 'cjs'
     },
     {
       file: pkg.module,
       name: name,
-      format: 'es',
-      sourceMap: true
+      format: 'es'
     }
   ]
 };
