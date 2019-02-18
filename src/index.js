@@ -33,7 +33,9 @@ export class ValidateBase {
     (this.negate && result && message && this.messages.push(message)) ||
       (!this.negate && !result && message && this.messages.push(message));
     this.priorityMessage =
-      (!this.isValid && isPriority && message) || this.priorityMessage;
+      (!this.negate && !result && isPriority && message) ||
+      (this.negate && result && isPriority && message) ||
+      this.priorityMessage;
     return this;
   };
 

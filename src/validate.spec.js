@@ -256,7 +256,7 @@ describe('Validate', () => {
             .errors()
         ).toEqual(['Value is not a number', 'No uppercase', 'No lowercase']);
       });
-      it('returns only the priority message if "isPriority: true" passed and value is invalid for that function', () => {
+      it('returns only the priority message if "isPriority: true" passed and value is invalid for that function - 1', () => {
         expect(
           validate
             .test('*&%$')
@@ -265,6 +265,20 @@ describe('Validate', () => {
             .hasLowerCase({ message: 'No lowercase' })
             .errors()
         ).toEqual(['Value is not a number']);
+      });
+      it('returns only the priority message if "isPriority: true" passed and value is invalid for that function - 2', () => {
+        expect(
+          validate
+            .test('*$^%')
+            .isNumeric({ message: 'Value is not a number' })
+            .lengthBetween({
+              min: 1,
+              message: 'Not long enough',
+              isPriority: true
+            })
+            .hasLowerCase({ message: 'No lowercase' })
+            .errors()
+        ).toEqual(['Value is not a number', 'No lowercase']);
       });
       it('returns all messages if "isPriority: true" passed but value is valid for that function', () => {
         expect(
@@ -309,6 +323,19 @@ describe('Validate', () => {
           .errors(obj => funcMock(obj.isValid, obj.priorityMessage));
         expect(funcMock).toBeCalledTimes(0);
       });
+    });
+    it('returns only the priority message if "isPriority: true" passed to multiple functions', () => {
+      expect(
+        validate
+          .test('123')
+          .hasUpperCase({ message: 'No uppercase', isPriority: true })
+          .lengthBetween({ min: 4, message: 'Too short', isPriority: true })
+          .invert('isNumeric', {
+            message: "We don't want a number",
+            isPriority: true
+          }) // this fails validation as we want invert to fail the validation if value is a number
+          .errors()
+      ).toEqual(["We don't want a number"]);
     });
   });
 
