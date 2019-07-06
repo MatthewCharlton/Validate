@@ -1,16 +1,4 @@
 {
-  "presets": [
-    "airbnb",
-    "es2015",
-    [
-      "babel-preset-env",
-      {
-        "modules": false
-      }
-    ]
-  ],
-  "plugins": [
-    "transform-es2015-spread",
-    "transform-class-properties"
-  ]
+  "presets": ["@babel/preset-env"],
+  "plugins": ["transform-es2015-spread", "transform-class-properties"]
 }

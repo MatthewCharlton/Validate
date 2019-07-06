@@ -1,12 +1,10 @@
 import babel from 'rollup-plugin-babel';
-import babelrc from 'babelrc-rollup';
-import istanbul from 'rollup-plugin-istanbul';
 import minify from 'rollup-plugin-babel-minify';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
 
-let plugins = [babel(babelrc()), minify()];
+let plugins = [babel(), minify()];
 
 if (process.env.BUILD !== 'production') {
   plugins.push(
