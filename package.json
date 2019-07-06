@@ -1,6 +1,6 @@
 {
   "name": "matts-sick-validation-func",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Validation functions",
   "browser": "dist/matts-sick-validation-func.min.js",
   "main": "dist/matts-sick-validation-func.common.js",
@@ -20,8 +20,8 @@
   "author": "MatthewCharlton",
   "license": "ISC",
   "files": [
-    "src",
-    "dist"
+    "dist",
+    "README.md"
   ],
   "dependencies": {},
   "devDependencies": {
