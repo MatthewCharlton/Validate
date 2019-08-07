@@ -428,6 +428,24 @@ describe('Validate', () => {
         isAlphabet
       });
       expect(schema.test('abc').isAlphabet().isValid).toBe(true);
+      expect(schema.test('123').isAlphabet().isValid).toBe(false);
+    });
+    it('Create new validation function using imported function', () => {
+      const schema = new ValidateBase({
+        isNumeric,
+        lengthBetween,
+        postcode: ({ message } = {}) =>
+          schema.matches({
+            fn: value =>
+              schema
+                .test(value)
+                .isNumeric()
+                .lengthBetween({ min: 4, max: 4 }).isValid,
+            message
+          })
+      });
+      expect(schema.test(2000).postcode().isValid).toBe(true);
+      expect(schema.test(20004).postcode().isValid).toBe(false);
     });
   });
 });
