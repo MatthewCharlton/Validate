@@ -131,6 +131,7 @@ function functions(thisArg) {
       })
   };
 }
+
 const validate = new ValidateBase({
   hasDigits,
   hasUpperCase,
@@ -141,12 +142,14 @@ const validate = new ValidateBase({
   lengthBetween
 });
 
-export const hasDigits = functions(validate).hasDigits;
-export const hasUpperCase = functions(validate).hasUpperCase;
-export const hasLowerCase = functions(validate).hasLowerCase;
-export const lengthBetween = functions(validate).lengthBetween;
-export const isAlphanumeric = functions(validate).isAlphanumeric;
-export const isAlphabet = functions(validate).isAlphabet;
-export const isNumeric = functions(validate).isNumeric;
+export const {
+  hasDigits,
+  hasUpperCase,
+  hasLowerCase,
+  isAlphanumeric,
+  isAlphabet,
+  isNumeric,
+  lengthBetween
+} = functions(validate);
 
 export default validate;
