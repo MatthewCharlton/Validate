@@ -1,28 +1,45 @@
 const validate = require('../dist/matts-sick-validation-func.common.js')
   .default;
 
+console.log(
+  'validate',
+  validate
+    .test('abc')
+    .isAlphabet()
+    .hasLowerCase().isValid
+);
+
 const {
+  ValidateBase,
   isAlphabet,
+  lengthBetween,
   isNumeric
 } = require('../dist/matts-sick-validation-func.common.js');
 
 console.log(
-  isAlphabet({ value: '123' }).isValid && isNumeric({ value: '123' }).isValid
+  'individual',
+  isAlphabet({ value: 'abc' }).isValid && isNumeric({ value: '123' }).isValid
 );
 
-const {
-  ValidateBase
-} = require('../dist/matts-sick-validation-func.common.js');
-
-console.log(validate.test('abc').isAlphabet().isValid);
-
 const customValidate = new ValidateBase({
-  isWebAddress: ({ value, min = 0, max = '', message } = {}) =>
+  isAlphabet,
+  lengthBetween,
+  username: ({ message } = {}) =>
     customValidate.matches({
-      regex: `^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+\.[a-z]+(\/[a-zA-Z0-9.#]+\/?){${min},${max}}$`,
+      fn: value =>
+        customValidate
+          .test(value)
+          .isAlphabet()
+          .lengthBetween({ min: 2, max: 5 }).isValid,
+      message
+    }),
+  website: ({ value, message } = {}) =>
+    customValidate.matches({
+      regex: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
       message,
       value
     })
 });
 
-console.log(customValidate.test('www.blah.com').isWebAddress().isValid);
+console.log('username', customValidate.test('sas').username().isValid);
+console.log('website', customValidate.test('www.blah_com').website().isValid);

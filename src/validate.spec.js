@@ -1,4 +1,5 @@
 import validate, {
+  ValidateBase,
   hasDigits,
   hasUpperCase,
   hasLowerCase,
@@ -418,6 +419,15 @@ describe('Validate', () => {
           isAlphanumeric({ value: 'abc123', min: 2, max: 3 }).isValid
         ).toBe(false);
       });
+    });
+  });
+
+  describe('Create new validation object', () => {
+    it('New validation object correctly includes imported function', () => {
+      const schema = new ValidateBase({
+        isAlphabet
+      });
+      expect(schema.test('abc').isAlphabet().isValid).toBe(true);
     });
   });
 });

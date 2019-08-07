@@ -170,18 +170,44 @@ validate
 
 #### Extend with your own functions
 
-Import the base ValidateBase function and pass in an object with your custom named functions using the **matches** function
+Import the base ValidateBase function and pass in an object with your custom functions using the **matches** function
+Note: be sure to pass in any required functions that your custom validations rely on
 
 ```javascript
-import { ValidateBase } from 'matts-sick-validation-func';
+import {
+  ValidateBase,
+  hasUpperCase,
+  hasLowerCase,
+  hasDigits,
+  lengthBetween
+} from 'matts-sick-validation-func';
 
 const customValidate = new ValidateBase({
-  isWebAddress: ({ value, min = 0, max = '', message } = {}) =>
+  hasUpperCase,
+  hasLowerCase,
+  hasDigits,
+  lengthBetween,
+  username: ({ message } = {}) =>
     customValidate.matches({
-      value,
-      regex: `^((https?):\/\/)?(www.)?[a-z0-9]+\.[a-z]+\.[a-z]+(\/[a-zA-Z0-9.#]+\/?){${min},${max}}$`,
+      fn: value =>
+        customValidate
+          .test(value)
+          .hasUpperCase()
+          .hasLowerCase()
+          .hasDigits()
+          .hasSpecialChars({ min: 2 })
+          .lengthBetween({ min: 8, max: 20 }).isValid,
+      message
+    }),
+  hasSpecialChars: ({ value, message, min, max } = {}) =>
+    customValidate.matches({
+      regex: /[!@#\$%\^\&\*\)\(\+=\._-]/g,
       message,
-      isPriority
+      min,
+      max,
+      value
     })
 });
+
+console.log('username', customValidate.test('Testing12#%').username().isValid); // true
 ```

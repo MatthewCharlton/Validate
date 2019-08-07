@@ -1,6 +1,8 @@
 export class ValidateBase {
   constructor(config = {}) {
-    Object.keys(config).map(fn => (this[fn] = config[fn]));
+    Object.keys(config).forEach(fn => {
+      this[fn] = functions(this)[fn] ? functions(this)[fn] : config[fn];
+    });
     this.value = '';
     this.messages = [];
     this.negate = false;
@@ -53,84 +55,82 @@ export class ValidateBase {
   };
 }
 
-export const hasDigits = ({
-  value,
-  min,
-  max,
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({ regex: /\d/g, min, max, message, value, isPriority });
-
-export const hasUpperCase = ({
-  value,
-  min,
-  max,
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({ regex: /[A-Z]/g, min, max, message, value, isPriority });
-
-export const hasLowerCase = ({
-  value,
-  min,
-  max,
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({ regex: /[a-z]/g, min, max, message, value, isPriority });
-
-export const lengthBetween = ({
-  value,
-  min = 0,
-  max = '',
-  message,
-  isPriority = false
-}) =>
-  validate.matches({ regex: `^.{${min},${max}}$`, message, value, isPriority });
-
-export const isAlphanumeric = ({
-  value,
-  min = 0,
-  max = '',
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({
-    regex: `^[a-zA-Z0-9]{${min},${max}}$`,
-    message,
-    value,
-    isPriority
-  });
-
-export const isAlphabet = ({
-  value,
-  min = 0,
-  max = '',
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({
-    regex: `^[a-zA-Z]{${min},${max}}$`,
-    message,
-    value,
-    isPriority
-  });
-
-export const isNumeric = ({
-  value,
-  min = 0,
-  max = '',
-  message,
-  isPriority = false
-} = {}) =>
-  validate.matches({
-    regex: `^[0-9.,]{${min},${max}}$`,
-    message,
-    value,
-    isPriority
-  });
-
+function functions(thisArg) {
+  return {
+    hasDigits: ({ value, min, max, message, isPriority = false } = {}) =>
+      thisArg.matches({ regex: /\d/g, min, max, message, value, isPriority }),
+    hasUpperCase: ({ value, min, max, message, isPriority = false } = {}) =>
+      thisArg.matches({
+        regex: /[A-Z]/g,
+        min,
+        max,
+        message,
+        value,
+        isPriority
+      }),
+    hasLowerCase: ({ value, min, max, message, isPriority = false } = {}) =>
+      thisArg.matches({
+        regex: /[a-z]/g,
+        min,
+        max,
+        message,
+        value,
+        isPriority
+      }),
+    lengthBetween: ({
+      value,
+      min = 0,
+      max = '',
+      message,
+      isPriority = false
+    }) =>
+      thisArg.matches({
+        regex: `^.{${min},${max}}$`,
+        message,
+        value,
+        isPriority
+      }),
+    isAlphanumeric: ({
+      value,
+      min = 0,
+      max = '',
+      message,
+      isPriority = false
+    } = {}) =>
+      thisArg.matches({
+        regex: `^[a-zA-Z0-9]{${min},${max}}$`,
+        message,
+        value,
+        isPriority
+      }),
+    isAlphabet: ({
+      value,
+      min = 0,
+      max = '',
+      message,
+      isPriority = false
+    } = {}) =>
+      thisArg.matches({
+        regex: `^[a-zA-Z]{${min},${max}}$`,
+        message,
+        value,
+        isPriority
+      }),
+    isNumeric: ({
+      value,
+      min = 0,
+      max = '',
+      message,
+      isPriority = false
+    } = {}) =>
+      thisArg.matches({
+        regex: `^[0-9.,]{${min},${max}}$`,
+        message,
+        value,
+        isPriority
+      })
+  };
+}
 const validate = new ValidateBase({
   hasDigits,
   hasUpperCase,
@@ -140,5 +140,13 @@ const validate = new ValidateBase({
   isNumeric,
   lengthBetween
 });
+
+export const hasDigits = functions(validate).hasDigits;
+export const hasUpperCase = functions(validate).hasUpperCase;
+export const hasLowerCase = functions(validate).hasLowerCase;
+export const lengthBetween = functions(validate).lengthBetween;
+export const isAlphanumeric = functions(validate).isAlphanumeric;
+export const isAlphabet = functions(validate).isAlphabet;
+export const isNumeric = functions(validate).isNumeric;
 
 export default validate;
