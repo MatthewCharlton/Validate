@@ -145,7 +145,7 @@ validate.test('Abc 123').invert('matches', { regex: /[a-zA-Z\s\d]/ }).isValid; /
 
 Aside from getting the result of a validation directly using `.isValid` or `.messages` you can call `.errors()` which will retrieve either the priorityMessage and output as an array or the messages array. You can alternatively pass in a function which is passed the whole validation object as a parameter and will only execute if the value is invalid
 
-In the example below `isPriority` is not passed into any validate methods and no funciton is passed into `.errors()` so the result will be the messages array:
+In the example below `isPriority` is not passed into any validate methods and no function is passed into `.errors()` so the result will be the messages array:
 
 ```javascript
 validate
